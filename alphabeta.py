@@ -7,6 +7,7 @@ def eval_function(board):
     # if the state is a winning state, add 1000 points
     # minimax: white is the positive player, black is the negative  
 
+
     NUM_KINGS_WHITE = len(board.pieces(piece_type=chess.KING, color=chess.WHITE))
     NUM_KINGS_BLACK = len(board.pieces(piece_type=chess.KING, color=chess.BLACK))
      
