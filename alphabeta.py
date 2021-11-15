@@ -1,6 +1,6 @@
 import chess
 
-SEARCH_DEPTH = 2
+SEARCH_DEPTH = 3
 
 def eval_function(board):
 
@@ -30,16 +30,66 @@ def eval_function(board):
     f += 9 * (NUM_QUEENS_WHITE - NUM_QUEENS_BLACK)
     f += 5 * (NUM_ROOKS_WHITE - NUM_ROOKS_BLACK)
     f += 3 * (NUM_BISHOPS_WHITE - NUM_BISHOPS_BLACK)
-    f += 3 * (NUM_KNITGHTS_WHITE - NUM_KNIGHTS_BLACK)
+    f += 3 * (NUM_KNIGHTS_WHITE - NUM_KNIGHTS_BLACK)
     f += 1 * (NUM_PAWNS_WHITE - NUM_PAWNS_BLACK) 
 
+    return f
 
-def minimax(board, depth):
+def min(board, depth):
+
+    if(depth == 0):
+        return eval_function(board)
     
-
-def compute_move(board): 
-
+    min_move = None
+    min_val = None
+         
     for move in board.legal_moves:
+        board.push(move)
+        curr_val = max(board, depth - 1)
+        if min_val is None or curr_val < min_val:
+            min_val = curr_val
+            min_move = move 
+        board.pop()
+    
+    return min_val        
+            
+
+def max(board, depth):
+
+    if(depth == 0):
+        return eval_function(board)
+    
+    max_move = None
+    max_val = None
+         
+    for move in board.legal_moves:
+        board.push(move)
+        curr_val = min(board, depth - 1)
+        if max_val is None or curr_val > max_val:
+            max_val = curr_val
+            max_move = move
+        board.pop()
+    
+    return max_val        
+
+def compute_min(board, depth):
+
+    if(depth == 0):
+        return eval_function(board)
+    
+    min_move = None
+    min_val = None
+         
+    for move in board.legal_moves:
+        board.push(move)
+        curr_val = max(board, depth - 1)
+        if min_val is None or curr_val < min_val:
+            min_val = curr_val
+            min_move = move
+        board.pop()
+    
+    return min_move        
+
 if __name__ == "__main__":
     
     print("Starting pos:")
@@ -68,17 +118,10 @@ if __name__ == "__main__":
                 
             board.push(move)
         else:
-            ai_move = compute_move(board)
+            ai_move = compute_min(board, SEARCH_DEPTH)
             board.push(ai_move)
 
         
     turn = "WHITE" if board.turn else "BLACK"
     print(turn + " won")
             
-        
-            
-            
-        
-	   
-
-
