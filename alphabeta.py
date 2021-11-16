@@ -53,6 +53,8 @@ def min(board, depth, alpha, beta):
         if min_val is None or curr_val < min_val:
             min_val = curr_val
             min_move = move 
+            alpha = curr_val
+            
         board.pop()
     
     return min_val        
@@ -75,6 +77,7 @@ def max(board, depth, alpha, beta):
         if max_val is None or curr_val > max_val:
             max_val = curr_val
             max_move = move
+            beta = curr_val
         board.pop()
     
     return max_val        

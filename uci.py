@@ -1,4 +1,3 @@
-
 from __future__ import print_function
 from __future__ import division
 import importlib
@@ -38,7 +37,6 @@ def main():
 
     stack = []
     
-
     runner = None
 
     while True:
@@ -62,7 +60,6 @@ def main():
 
         elif smove == 'ucinewgame':
             runner = ChessRunner()
-            
 
         # syntax specified in UCI
         # position [fen  | startpos ]  moves  ....
