@@ -1,12 +1,11 @@
 import chess
 
-SEARCH_DEPTH = 3
+SEARCH_DEPTH = 7
 
 def eval_function(board):
 
     # if the state is a winning state, add 1000 points
     # minimax: white is the positive player, black is the negative  
-
 
     NUM_KINGS_WHITE = len(board.pieces(piece_type=chess.KING, color=chess.WHITE))
     NUM_KINGS_BLACK = len(board.pieces(piece_type=chess.KING, color=chess.BLACK))
@@ -36,7 +35,7 @@ def eval_function(board):
 
     return f
 
-def min(board, depth, alpha, beta):
+def min(board, depth):
 
     if(depth == 0):
         return eval_function(board)
@@ -46,19 +45,15 @@ def min(board, depth, alpha, beta):
          
     for move in board.legal_moves:
         board.push(move)
-        curr_val = max(board, depth - 1, alpha, beta)
-        if curr_val > beta:
-            board.pop()
-            return curr_val
+        curr_val = max(board, depth - 1)
         if min_val is None or curr_val < min_val:
             min_val = curr_val
             min_move = move 
         board.pop()
     
     return min_val        
-            
 
-def max(board, depth, alpha, beta):
+def max(board, depth):
 
     if(depth == 0):
         return eval_function(board)
@@ -68,10 +63,7 @@ def max(board, depth, alpha, beta):
          
     for move in board.legal_moves:
         board.push(move)
-        curr_val = min(board, depth - 1, alpha, beta)
-        if(curr_val < alpha):
-            board.pop()
-            return curr_val
+        curr_val = min(board, depth - 1)
         if max_val is None or curr_val > max_val:
             max_val = curr_val
             max_move = move
@@ -79,26 +71,20 @@ def max(board, depth, alpha, beta):
     
     return max_val        
 
-def alphabeta(board, depth):
+def compute_min(board, depth):
 
     if(depth == 0):
         return eval_function(board)
     
     min_move = None
     min_val = None
-    
-    # alpha is the upper bound, beta is the lower bound
-
-    alpha = -9999
-    beta = 9999
          
     for move in board.legal_moves:
         board.push(move)
-        curr_val = max(board, depth - 1, alpha, beta)
+        curr_val = max(board, depth - 1)
         if min_val is None or curr_val < min_val:
             min_val = curr_val
             min_move = move
-            alpha = curr_val
         board.pop()
     
     return min_move        
@@ -131,7 +117,7 @@ if __name__ == "__main__":
                 
             board.push(move)
         else:
-            ai_move = alphabeta(board, SEARCH_DEPTH)
+            ai_move = compute_min(board, SEARCH_DEPTH)
             board.push(ai_move)
 
         
