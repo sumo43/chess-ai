@@ -6,40 +6,39 @@ import sys
 import time
 import logging
 import argparse
+import alphabeta
 
-import tools
-import sunfish
-
-from chess_runner import ChessRunner
 import chess
-from alphabeta import alphabeta
+
+SEARCH_DEPTH = 3
 
 class ChessRunner():
-    def __init__():
+
+    def __init__(self):
         self.board = chess.Board()  
-    
-    def handle_move(uci_move : str):  
+
+    def player_move_from_uci(self, uci_move : str):  
         move = chess.Move.from_uci(uci_move)
-        board.push(move)
-    
-    def get_ai_move():
-        ai_move = alphabeta(board, 7) 
-        board.push(ai_move)
+        self.board.push(move)
+
+    def get_ai_move(self):
+        ai_move = alphabeta.alphabeta(self.board, 3) 
+        self.board.push(ai_move)
         return str(ai_move)
 
 def main():
 
     def output(line):
-        print(line, file=out)
+        print(line)
         logging.debug(line)
 
     our_time, opp_time = 1000, 1000 # time in centi-seconds
-
     stack = []
-    
     runner = None
 
     while True:
+
+        # if stack not empty, get the move from the stack. Else, take input 
         if stack:
             smove = stack.pop()
         else:
@@ -49,7 +48,8 @@ def main():
 
         if smove == 'quit':
             break
-
+        
+        # answer query for uci info
         elif smove == 'uci':
             output('id name ai-chess')
             output('id author Artem Yatsenko')
@@ -57,12 +57,21 @@ def main():
 
         elif smove == 'isready':
             output('readyok')
-
+        
+        elif smove == 'register':
+            output('later')
+        
+        # we dont need to do anything else here, since chessrunner already starts with an initial state
         elif smove == 'ucinewgame':
             runner = ChessRunner()
 
         # syntax specified in UCI
         # position [fen  | startpos ]  moves  ....
+
+
+        # if it starts with position, try to find moves. The moves will be after that string
+        # unless the position is startpos, in which case just use the starting position of the board
+        # if there is a single move, it also may be in this format: position fen a3a5
 
         elif smove.startswith('position'):
             params = smove.split(' ')
@@ -72,7 +81,7 @@ def main():
                 moveslist = smove[idx:].split()[1:]
             else:
                 moveslist = []
-
+            """
             if params[1] == 'fen':
                 if idx >= 0:
                     fenpart = smove[:idx]
@@ -82,23 +91,21 @@ def main():
                 _, _, fen = fenpart.split(' ', 2)
 
             elif params[1] == 'startpos':
-                fen = tools.FEN_INITIAL
-
-            else:
+                # dont do anything
                 pass
+            
+            curr_move = moveslist[0]
+            runner.player_move(curr_move)
+            """
 
-            pos = tools.parseFEN(fen)
-            color = WHITE if fen.split()[1] == 'w' else BLACK
-
-            for move in moveslist:
-                pos = pos.move(tools.mparse(color, move))
-                color = 1 - color
-
+            if params[1] == 'startpos':
+                pass
+            else:
+                runner.player_move_from_uci(moveslist[0])
+        
         elif smove.startswith('go'):
             #  default options
-            depth = 1000
-            movetime = -1
-
+            """
             _, *params = smove.split(' ')
             for param, val in zip(*2*(iter(params),)):
                 if param == 'depth':
@@ -138,15 +145,9 @@ def main():
 
             entry = searcher.tp_score.get((pos, sdepth, True))
             m, s = searcher.tp_move.get(pos), entry.lower
-            # We only resign once we are mated.. That's never?
-            if s == -sunfish.MATE_UPPER:
-                output('resign')
-            else:
-                moves = moves.split(' ')
-                if len(moves) > 1:
-                    output(f'bestmove {moves[0]} ponder {moves[1]}')
-                else:
-                    output('bestmove ' + moves[0])
+            """
+            ai_move = runner.get_ai_move()
+            output('bestmove ' + ai_move)
 
         elif smove.startswith('time'):
             our_time = int(smove.split()[1])
