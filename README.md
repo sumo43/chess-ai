@@ -16,11 +16,11 @@ PROGRESS
 TODO
 ------
 
-- [X] familiarize with python-chess library, make a basic chess game (30 min)
-- [X] read about AI minimax (1 hr)
-- [ ] Make the chess bots uci-compatible (1 hr)
-- [ ] Implement pruned minimax chess engine (1.5 hr)
-- [ ] read about Monte carlo sims (1 hr)
+- [X] familiarize with python-chess library, make a basic chess game 
+- [X] read about AI minimax
+- [ ] Make the chess bots uci-compatible
+- [ ] Implement pruned minimax chess engine 
+- [ ] read about Monte carlo sims
 
 
 
