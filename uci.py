@@ -12,12 +12,17 @@ import chess
 
 SEARCH_DEPTH = 3
 
+
+# load board from fen 
+# load move from uci
+
 class ChessRunner():
 
     def __init__(self):
         self.board = chess.Board()  
 
-    def player_move_from_uci(self, uci_move : str):  
+    def player_move_from_uci(self, uci_move : str, board_fen : str):  
+        self.board = chess.Board(board_fen)
         move = chess.Move.from_uci(uci_move)
         self.board.push(move)
 
@@ -81,7 +86,6 @@ def main():
                 moveslist = smove[idx:].split()[1:]
             else:
                 moveslist = []
-            """
             if params[1] == 'fen':
                 if idx >= 0:
                     fenpart = smove[:idx]
@@ -90,18 +94,12 @@ def main():
 
                 _, _, fen = fenpart.split(' ', 2)
 
-            elif params[1] == 'startpos':
-                # dont do anything
-                pass
-            
-            curr_move = moveslist[0]
-            runner.player_move(curr_move)
-            """
+                runner.player_move_from_uci(moveslist[0], fen)
 
-            if params[1] == 'startpos':
+            elif params[1] == 'startpos':
+                # use the starting board state
+                runner.player_move_from_uci(moveslist[0], chess.STARTING_FEN) 
                 pass
-            else:
-                runner.player_move_from_uci(moveslist[0])
         
         elif smove.startswith('go'):
             #  default options
