@@ -2,6 +2,7 @@ import chess
 from util import naive_eval_function
 
 SEARCH_DEPTH = 3
+eval_function = naive_eval_function
 
 def min(board, depth, alpha, beta):
 
@@ -48,7 +49,7 @@ def max(board, depth, alpha, beta):
     
     return max_val        
 
-def alphabeta(board, depth):
+def alphabeta(board, depth=3):
 
     if(depth == 0):
         return eval_function(board)

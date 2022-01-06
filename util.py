@@ -1,3 +1,4 @@
+import chess
 
 def naive_eval_function(board):
     
