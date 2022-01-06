@@ -1,5 +1,3 @@
-from __future__ import print_function
-from __future__ import division
 import importlib
 import re
 import sys
@@ -11,7 +9,6 @@ import alphabeta
 import chess
 
 SEARCH_DEPTH = 3
-
 
 # load board from fen 
 # load move from uci
@@ -72,7 +69,6 @@ def main():
 
         # syntax specified in UCI
         # position [fen  | startpos ]  moves  ....
-
 
         # if it starts with position, try to find moves. The moves will be after that string
         # unless the position is startpos, in which case just use the starting position of the board
