@@ -18,7 +18,8 @@ TODO
 
 - [X] familiarize with python-chess library, make a basic chess game 
 - [X] read about AI minimax
-- [ ] Make the chess bots uci-compatible
+- [ ] Make the chess bots uci-compatible (to measure elo, etc...)
+- [ ] chess bot testing flow
 - [ ] Implement pruned minimax chess engine 
 - [ ] read about Monte carlo sims
 
