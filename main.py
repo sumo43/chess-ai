@@ -1,15 +1,20 @@
 from chessengine import ChessEngine
+from time import sleep
 
-
-engine = ChessEngine()
-print(engine.board)
-engine.ai_move()
-print(engine.board)
 
 
 def selfplay():
     engine = ChessEngine()
 
-    while not engine.is_game_over():
-        print(engine)
+    while not engine.board.is_game_over():
+        print(engine.board)
+        print()
         engine.ai_move()
+        sleep(1)
+
+if __name__ == "__main__":
+    """
+    engine = ChessEngine()
+    engine.ai_move()
+    """
+    selfplay()
