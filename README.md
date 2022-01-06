@@ -7,7 +7,7 @@ PROGRESS
 ------
 
 - [X] Naive minimax chess engine
-- [ ] Alpha beta chess engine
+- [X] Alpha beta chess engine
 - [ ] Monte Carlo Chess engine
 - [ ] Multi Layer Neural Network chess
 - [ ] Reinforcement Learning Chess
