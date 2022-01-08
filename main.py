@@ -14,9 +14,9 @@ def selfplay():
     print(engine.board.outcome())
     print(i)
 
-if __name__ == "__main__":
-    """
+def ucimode():
     engine = ChessEngine()
-    engine.ai_move()
-    """
-    selfplay()
+    engine.uci_mode()
+
+if __name__ == "__main__":
+    ucimode()
