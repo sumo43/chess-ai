@@ -4,7 +4,7 @@ from util import naive_eval_function
 SEARCH_DEPTH = 3
 eval_function = naive_eval_function
 
-def min(board, depth, alpha, beta):
+def min(board, depth, alpha, beta, moves):
 
     if(depth == 0):
         return eval_function(board)
@@ -13,21 +13,22 @@ def min(board, depth, alpha, beta):
     min_val = None
          
     for move in board.legal_moves:
-        board.push(move)
-        curr_val = max(board, depth - 1, alpha, beta)
-        if curr_val > beta:
+        if move not in moves:
+            board.push(move)
+            curr_val = max(board, depth - 1, alpha, beta, moves)
+            if curr_val > beta:
+                board.pop()
+                return curr_val
+            if min_val is None or curr_val < min_val:
+                min_val = curr_val
+                min_move = move 
+                alpha = curr_val
+                
             board.pop()
-            return curr_val
-        if min_val is None or curr_val < min_val:
-            min_val = curr_val
-            min_move = move 
-            alpha = curr_val
-            
-        board.pop()
-    
+        
     return min_val        
 
-def max(board, depth, alpha, beta):
+def max(board, depth, alpha, beta, moves):
 
     if(depth == 0):
         return eval_function(board)
@@ -36,20 +37,21 @@ def max(board, depth, alpha, beta):
     max_val = None
          
     for move in board.legal_moves:
-        board.push(move)
-        curr_val = min(board, depth - 1, alpha, beta)
-        if(curr_val < alpha):
+        if move not in moves:
+            board.push(move)
+            curr_val = min(board, depth - 1, alpha, beta, moves)
+            if(curr_val < alpha):
+                board.pop()
+                return curr_val
+            if max_val is None or curr_val > max_val:
+                max_val = curr_val
+                max_move = move
+                beta = curr_val
             board.pop()
-            return curr_val
-        if max_val is None or curr_val > max_val:
-            max_val = curr_val
-            max_move = move
-            beta = curr_val
-        board.pop()
     
     return max_val        
 
-def alphabeta(board, depth=3):
+def alphabeta(board, depth, moves):
 
     if board.turn == chess.WHITE:
         if(depth == 0):
@@ -64,14 +66,15 @@ def alphabeta(board, depth=3):
         beta = 9999
             
         for move in board.legal_moves:
-            board.push(move)
-            curr_val = max(board, depth - 1, alpha, beta)
-            if min_val is None or curr_val < min_val:
-                min_val = curr_val
-                min_move = move
-                alpha = curr_val
-            board.pop()
-        
+            if move not in moves:
+                board.push(move)
+                curr_val = max(board, depth - 1, alpha, beta, moves)
+                if min_val is None or curr_val < min_val:
+                    min_val = curr_val
+                    min_move = move
+                    alpha = curr_val
+                board.pop()
+            
         return min_move        
 
     elif board.turn == chess.BLACK:
@@ -88,13 +91,14 @@ def alphabeta(board, depth=3):
         beta = 9999
             
         for move in board.legal_moves:
-            board.push(move)
-            curr_val = min(board, depth - 1, alpha, beta)
-            if max_val is None or curr_val > max_val:
-                max_val = curr_val
-                max_move = move
-                beta = curr_val
-            board.pop()
+            if move not in moves:
+                board.push(move)
+                curr_val = min(board, depth - 1, alpha, beta, moves)
+                if max_val is None or curr_val > max_val:
+                    max_val = curr_val
+                    max_move = move
+                    beta = curr_val
+                board.pop()
         
         return max_move
 
