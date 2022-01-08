@@ -21,7 +21,15 @@ class ChessEngine():
             nextmove = self.ai(self.board, DEPTH, self.moves[self.board.turn])
         self.moves[self.board.turn].append(nextmove)
         self.board.push(nextmove)
-        return nextmove.to_uci()
+        return str(nextmove)
+
+    def output(self, s):
+        print(s)
+    
+    def reset_game(self):
+        self.moves[chess.WHITE] = []
+        self.moves[chess.BLACK] = []
+        self.board = Board()
     
     def uci_mode(self):
         # uci mode for chess bot executable
@@ -37,18 +45,19 @@ class ChessEngine():
                 break
             
             elif smove == 'uci':
-                output('id name ai-chess')
-                output('id author Artem Yatsenko')
-                output('uciok')
+                self.output('id name ai-chess')
+                self.output('id author Artem Yatsenko')
+                self.output('uciok')
 
             elif smove == 'isready':
-                output('readyok')
+                self.output('readyok')
             
             elif smove == 'register':
-                output('later')
+                self.output('later')
             
             elif smove == 'ucinewgame':
-                runner = ChessRunner()
+                self.reset_game()
+                pass
 
             elif smove.startswith('position'):
                 params = smove.split(' ')
@@ -65,7 +74,8 @@ class ChessEngine():
                         self.board.push(chess.Move.from_uci(move_uci))
                 else:
                     fen = params[1]
-                    self.board.set_board_fen(fen)
+                    if self.board.fen() != fen:
+                        self.board.set_board_fen(fen)
                     for move_uci in moveslist:
                         self.board.push(chess.Move.from_uci(move_uci))
                  
@@ -73,7 +83,7 @@ class ChessEngine():
 
                 fen_move = self.ai_move()
 
-                print(f'bestmove ' + fen_move)
+                self.output('bestmove ' + fen_move)
 
             else:
                 pass
