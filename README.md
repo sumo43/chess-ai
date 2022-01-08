@@ -19,16 +19,3 @@ Chess AI agent. Goal is 1800+ ELO 🚀
 -   [ ] Implement pruned minimax chess engine
 -   [ ] read about Monte carlo sims
 
-## UCI FORMAT: REQUIRED INPUT
-
-i: uci
-o: id name {name}
-id author {author}
-uciok
-
-i: isready
-o: readyok
-
-i:
-
-# OPTIONAL INPUT
