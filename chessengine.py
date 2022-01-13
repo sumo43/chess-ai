@@ -79,7 +79,7 @@ class ChessEngine():
                     for move_uci in moveslist:
                         self.board.push(chess.Move.from_uci(move_uci))
                  
-            elif smove == 'go':
+            elif smove.startswith('go'):
 
                 fen_move = self.ai_move()
 
