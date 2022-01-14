@@ -12,6 +12,8 @@ build
 output
 dist
 
+local.py
+
 .Python
 build/
 develop-eggs/
