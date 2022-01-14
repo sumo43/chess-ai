@@ -4,6 +4,7 @@ import berserk
 from local import API_TOKEN
 import threading
 
+
 def selfplay():
     engine = ChessEngine()
     i = 0
@@ -17,9 +18,11 @@ def selfplay():
     print(engine.board.outcome())
     print(i)
 
+
 def ucimode():
     engine = ChessEngine()
     engine.uci_mode()
+
 
 class Game(threading.Thread):
     def __init__(self, client, game_id, **kwargs):
@@ -40,11 +43,13 @@ class Game(threading.Thread):
     def handle_state_change(self, game_state):
 
         game_state_moves = game_state['moves'].split(' ')
-         
-        # read the game state 
+
+        # read the game state
         for move in game_state_moves:
             # push the move to the board
             self.engine.push_move(move)
+
+        self.engine.print_board()
         if len(game_state_moves) % 2 == 1:
             ai_move = self.engine.ai_move()
             self.client.bots.make_move(self.game_id, ai_move)
@@ -52,6 +57,7 @@ class Game(threading.Thread):
     def handle_chat_line(self, chat_line):
         print(chat_line)
         pass
+
 
 if __name__ == "__main__":
     session = berserk.TokenSession(API_TOKEN)
@@ -64,5 +70,3 @@ if __name__ == "__main__":
         elif event['type'] == 'gameStart':
             game = Game(client, game_id)
             game.start()
-
-    

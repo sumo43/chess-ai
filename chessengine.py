@@ -25,6 +25,9 @@ class ChessEngine():
 
     def output(self, s):
         print(s)
+
+    def print_board(self):
+        print(self.board)
     
     def reset_game(self):
         self.moves[chess.WHITE] = []
@@ -40,7 +43,6 @@ class ChessEngine():
         move = chess.Move.from_uci(move_str)
         self.moves[chess.BLACK].push(move)
         self.board.push(move)
-
 
     def uci_mode(self):
         # uci mode for chess bot executable
