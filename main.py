@@ -38,11 +38,19 @@ class Game(threading.Thread):
                 self.handle_chat_line(event)
 
     def handle_state_change(self, game_state):
+
+        game_state_moves = game_state['moves'].split(' ')
+         
         # read the game state 
-        print(game_state)
-        pass
+        for move in game_state_moves:
+            # push the move to the board
+            self.engine.push_move(move)
+        if len(game_state_moves) % 2 == 1:
+            ai_move = self.engine.ai_move()
+            self.client.bots.make_move(self.game_id, ai_move)
 
     def handle_chat_line(self, chat_line):
+        print(chat_line)
         pass
 
 if __name__ == "__main__":

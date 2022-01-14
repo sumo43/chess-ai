@@ -30,7 +30,18 @@ class ChessEngine():
         self.moves[chess.WHITE] = []
         self.moves[chess.BLACK] = []
         self.board = Board()
-    
+
+    def push_move_white(self, move_str):
+        move = chess.Move.from_uci(move_str)
+        self.moves[chess.WHITE].push(move)
+        self.board.push(move)
+
+    def push_move_black(self, move_str):
+        move = chess.Move.from_uci(move_str)
+        self.moves[chess.BLACK].push(move)
+        self.board.push(move)
+
+
     def uci_mode(self):
         # uci mode for chess bot executable
     
