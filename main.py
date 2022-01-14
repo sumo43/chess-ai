@@ -28,6 +28,7 @@ class Game(threading.Thread):
         self.client = client
         self.stream = client.bots.stream_game_state(game_id)
         self.current_state = next(self.stream)
+        self.engine = ChessEngine()
 
     def run(self):
         for event in self.stream:
@@ -37,12 +38,23 @@ class Game(threading.Thread):
                 self.handle_chat_line(event)
 
     def handle_state_change(self, game_state):
+        # read the game state 
+        print(game_state)
         pass
 
     def handle_chat_line(self, chat_line):
         pass
 
 if __name__ == "__main__":
-
     session = berserk.TokenSession(API_TOKEN)
     client = berserk.Client(session=session)
+
+    for event in client.bots.stream_incoming_events():
+        game_id = event['game']['id']
+        if event['type'] == 'challenge':
+            cliennt.bots.accept_challenge(game_id)
+        elif event['type'] == 'gameStart':
+            game = Game(client, game_id)
+            game.start()
+
+    
