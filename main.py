@@ -4,6 +4,7 @@ import berserk
 from local import API_TOKEN
 import threading
 import chess
+from pprint import pprint
 
 
 def selfplay():
@@ -34,6 +35,22 @@ class Game(threading.Thread):
         self.current_state = next(self.stream)
         self.engine = ChessEngine()
 
+        self.side = None
+
+        try:
+            if self.current_state['white']['id'] == 'yatsenkoa-bot':
+                # the side is white
+                self.side = chess.WHITE
+
+        except Exception as e:
+            # the side is probably not white
+            if self.current_state['black']['id'] == 'yatsenkoa-bot':
+                self.side = chess.BLACK
+
+        # the opponent is waiting for our first move
+        if self.side == chess.WHITE and self.current_state['state']['moves'] == '':
+            self.first_move()
+
     def run(self):
         for event in self.stream:
             if event['type'] == 'gameState':
@@ -41,28 +58,28 @@ class Game(threading.Thread):
             elif event['type'] == 'chatLine':
                 self.handle_chat_line(event)
 
+    def first_move(self):
+        sides = []
+        ai_move = self.engine.ai_move()
+        self.client.bots.make_move(self.game_id, ai_move)
+
     def handle_state_change(self, game_state):
 
         self.engine.reset_game()
 
-        print(game_state)
-
         game_state_moves = game_state['moves'].split(' ')
-
-        print(len(game_state_moves) % 2)
         i = 0
         # white, black, white, black...
         sides = [chess.WHITE, chess.BLACK]
 
         for move in game_state_moves:
-            self.engine.push_move(move, sides[i % 2])
-            i += 1
+            self.engine.push_move(move)
 
-        self.engine.print_sides()
+        if self.side == chess.BLACK and len(game_state_moves) % 2 == 1:
+            ai_move = self.engine.ai_move()
+            self.client.bots.make_move(self.game_id, ai_move)
 
-        self.engine.print_board()
-        if len(game_state_moves) % 2 == 1:
-            # the opponent just made a move, time to make a move
+        elif self.side == chess.WHITE and len(game_state_moves) % 2 == 0:
             ai_move = self.engine.ai_move()
             self.client.bots.make_move(self.game_id, ai_move)
 

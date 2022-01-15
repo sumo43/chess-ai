@@ -4,7 +4,7 @@ from alphabeta import alphabeta
 from minimax import compute_min
 # AI: given a board and a player (black or white), return the best Chess.Move
 
-DEPTH = 3
+DEPTH = 4
 
 
 class ChessEngine():
@@ -18,9 +18,9 @@ class ChessEngine():
         self.board = Board()
 
     def ai_move(self):
-        nextmove = self.ai(self.board, DEPTH, self.moves[self.board.turn])
+        nextmove = self.ai(self.board, DEPTH)
         while nextmove in self.moves[self.board.turn]:
-            nextmove = self.ai(self.board, DEPTH, self.moves[self.board.turn])
+            nextmove = self.ai(self.board, DEPTH)
         self.moves[self.board.turn].append(nextmove)
         self.board.push(nextmove)
         return str(nextmove)
@@ -36,13 +36,16 @@ class ChessEngine():
         self.moves[chess.BLACK] = []
         self.board = Board()
 
-    def push_move(self, move_str, move_side):
+    def push_move_exp(self, move_str, move_side):
         move = chess.Move.from_uci(move_str)
         if move_side == True:
             self.moves[chess.WHITE].append(move)
         else:
             self.moves[chess.BLACK].append(move)
         self.board.push(move)
+
+    def push_move(self, move_str):
+        self.board.push(chess.Move.from_uci(move_str))
 
     def print_sides(self):
         print("white: ")
