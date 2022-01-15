@@ -1,6 +1,7 @@
 import chess
 from chess import Board
 from alphabeta import alphabeta
+from minimax import compute_min
 # AI: given a board and a player (black or white), return the best Chess.Move
 
 DEPTH = 3
@@ -37,8 +38,17 @@ class ChessEngine():
 
     def push_move(self, move_str, move_side):
         move = chess.Move.from_uci(move_str)
-        self.moves[move_side].push(move)
+        if move_side == True:
+            self.moves[chess.WHITE].append(move)
+        else:
+            self.moves[chess.BLACK].append(move)
         self.board.push(move)
+
+    def print_sides(self):
+        print("white: ")
+        print(self.moves[chess.WHITE])
+        print("black: ")
+        print(self.moves[chess.BLACK])
 
     def uci_mode(self):
         # uci mode for chess bot executable

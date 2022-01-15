@@ -3,6 +3,7 @@ from time import sleep
 import berserk
 from local import API_TOKEN
 import threading
+import chess
 
 
 def selfplay():
@@ -42,17 +43,22 @@ class Game(threading.Thread):
 
     def handle_state_change(self, game_state):
 
+        self.engine.reset_game()
+
         print(game_state)
 
         game_state_moves = game_state['moves'].split(' ')
 
         print(len(game_state_moves) % 2)
         i = 0
-        turns = [chess.WHITE, chess.BLACK]
-        # read the game state
+        # white, black, white, black...
+        sides = [chess.WHITE, chess.BLACK]
+
         for move in game_state_moves:
-            # push the move to the board
-            self.engine.push_move(move)
+            self.engine.push_move(move, sides[i % 2])
+            i += 1
+
+        self.engine.print_sides()
 
         self.engine.print_board()
         if len(game_state_moves) % 2 == 1:

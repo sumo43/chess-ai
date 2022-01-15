@@ -4,6 +4,8 @@ Chess AI agent. Goal is 1800+ ELO 🚀
 
 ## PROGRESS
 
+#### Current Elo: ~1350 (beats Stockfish Lv1)
+
 -   [x] Naive minimax chess engine
 -   [x] Alpha beta chess engine
 -   [ ] Monte Carlo Chess engine
@@ -18,4 +20,3 @@ Chess AI agent. Goal is 1800+ ELO 🚀
 -   [ ] chess bot testing flow
 -   [ ] Implement pruned minimax chess engine
 -   [ ] read about Monte carlo sims
-
