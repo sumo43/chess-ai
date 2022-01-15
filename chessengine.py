@@ -4,24 +4,28 @@ from alphabeta import alphabeta
 from minimax import compute_min
 # AI: given a board and a player (black or white), return the best Chess.Move
 
-DEPTH = 3
+MAX_DEPTH = 3
 
 
 class ChessEngine():
 
     moves = dict()
-    moves[chess.WHITE] = []
-    moves[chess.BLACK] = []
+    maximizing_player = None
 
-    def __init__(self, ai=alphabeta):
+    def __init__(self, maximizing_player, ai=alphabeta):
         self.ai = ai
         self.board = Board()
+        self.maximizing_player = maximizing_player
 
     def ai_move(self):
-        nextmove = self.ai(self.board, DEPTH)
+        nextmove = self.ai(self.board, self.maximizing_player, MAX_DEPTH)
+        """
         while nextmove in self.moves[self.board.turn]:
-            nextmove = self.ai(self.board, DEPTH)
-        self.moves[self.board.turn].append(nextmove)
+            nextmove = self.ai(self.board, self.maximizing_player, 3)
+        """
+        print(self.board)
+        if nextmove == None:
+            return None
         self.board.push(nextmove)
         return str(nextmove)
 
@@ -32,8 +36,6 @@ class ChessEngine():
         print(self.board)
 
     def reset_game(self):
-        self.moves[chess.WHITE] = []
-        self.moves[chess.BLACK] = []
         self.board = Board()
 
     def push_move_exp(self, move_str, move_side):
@@ -47,11 +49,11 @@ class ChessEngine():
     def push_move(self, move_str):
         self.board.push(chess.Move.from_uci(move_str))
 
-    def print_sides(self):
-        print("white: ")
-        print(self.moves[chess.WHITE])
-        print("black: ")
-        print(self.moves[chess.BLACK])
+    def synchronize(self, list_moves):
+        for move in list_moves:
+            self.push_move(move)
+        print("synced")
+        print(self.board)
 
     def uci_mode(self):
         # uci mode for chess bot executable

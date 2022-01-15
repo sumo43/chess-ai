@@ -33,9 +33,8 @@ class Game(threading.Thread):
         self.client = client
         self.stream = client.bots.stream_game_state(game_id)
         self.current_state = next(self.stream)
-        self.engine = ChessEngine()
-
         self.side = None
+        self.synchronized = False
 
         try:
             if self.current_state['white']['id'] == 'yatsenkoa-bot':
@@ -47,9 +46,13 @@ class Game(threading.Thread):
             if self.current_state['black']['id'] == 'yatsenkoa-bot':
                 self.side = chess.BLACK
 
+        self.engine = ChessEngine(self.side)
+
         # the opponent is waiting for our first move
         if self.side == chess.WHITE and self.current_state['state']['moves'] == '':
-            self.first_move()
+            self.make_move()
+            # dont need to sync
+            self.synchronized = True
 
     def run(self):
         for event in self.stream:
@@ -58,30 +61,31 @@ class Game(threading.Thread):
             elif event['type'] == 'chatLine':
                 self.handle_chat_line(event)
 
-    def first_move(self):
-        sides = []
+    def make_move(self):
         ai_move = self.engine.ai_move()
+        if ai_move == None:
+            print("Surrendering...")
+            self.client.bots.abort_game(self.game_id)
         self.client.bots.make_move(self.game_id, ai_move)
 
     def handle_state_change(self, game_state):
-
-        self.engine.reset_game()
-
         game_state_moves = game_state['moves'].split(' ')
-        i = 0
-        # white, black, white, black...
-        sides = [chess.WHITE, chess.BLACK]
-
-        for move in game_state_moves:
-            self.engine.push_move(move)
 
         if self.side == chess.BLACK and len(game_state_moves) % 2 == 1:
-            ai_move = self.engine.ai_move()
-            self.client.bots.make_move(self.game_id, ai_move)
+            if not self.synchronized:
+                self.engine.synchronize(game_state_moves)
+                self.synchronized = True
+            else:
+                self.engine.push_move(game_state_moves[-1])
+            self.make_move()
 
         elif self.side == chess.WHITE and len(game_state_moves) % 2 == 0:
-            ai_move = self.engine.ai_move()
-            self.client.bots.make_move(self.game_id, ai_move)
+            if not self.synchronized:
+                self.engine.synchronize(game_state_moves)
+                self.synchronized = True
+            else:
+                self.engine.push_move(game_state_moves[-1])
+            self.make_move()
 
     def handle_chat_line(self, chat_line):
         print(chat_line)

@@ -1,148 +1,80 @@
 import chess
 from util import naive_eval_function
 
-eval_function = naive_eval_function
+EVAL_FUNC = naive_eval_function
+MAX_DEPTH = 4
 
 
-def min(board, depth, alpha, beta):
+def alphabeta_algorithm(board, depth, alpha, beta, maximizing_player):
+    board_value = naive_eval_function(board)
+    if depth == 0 or abs(board_value) == 200:
+        return naive_eval_function(board)
 
-    if(depth == 0):
-        return eval_function(board)
-
-    min_move = None
-    min_val = 9999
-
-    for move in board.legal_moves:
-        if min_move is None:
-            min_move = move
-        board.push(move)
-        curr_val = max(board, depth - 1, alpha, beta)
-        if curr_val > beta:
+    if maximizing_player:
+        value = -9999
+        for child in board.legal_moves:
+            board.push(child)
+            value = max(value, alphabeta_algorithm(board, depth - 1,
+                        alpha, beta, not maximizing_player))
             board.pop()
-            return curr_val
-        if curr_val is not None and (min_val is None or curr_val < min_val):
-            min_val = curr_val
-            min_move = move
-            alpha = curr_val
-
-        board.pop()
-
-    return min_val
-
-
-def max(board, depth, alpha, beta):
-
-    if(depth == 0):
-        return eval_function(board)
-
-    max_move = None
-    max_val = -9999
-
-    for move in board.legal_moves:
-        if max_move is None:
-            max_move = move
-        board.push(move)
-        curr_val = min(board, depth - 1, alpha, beta)
-        if(curr_val < alpha):
+            if value >= beta:
+                break
+            a = max(alpha, value)
+        return value
+    else:
+        value = 9999
+        for child in board.legal_moves:
+            board.push(child)
+            value = min(value, alphabeta_algorithm(board, depth - 1,
+                        alpha, beta, not maximizing_player))
             board.pop()
-            return curr_val
-        if curr_val is not None and (max_val is None or curr_val > max_val):
-            max_val = curr_val
-            max_move = move
-            beta = curr_val
-        board.pop()
-
-    return max_val
+            # we dont have to search any further, since this move is already less than alpha (for max player)
+            if value <= alpha:
+                break
+            # but this move might be less than alpha, which we can use
+            a = min(alpha, value)
+        return value
 
 
-def alphabeta(board, depth):
+def alphabeta(board, maximizing_player, depth=MAX_DEPTH):
 
-    if board.turn == chess.BLACK:
-        print("minimizing the board state...")
-        if(depth == 0):
-            return eval_function(board)
+    # the minimum score that the maximizing player is assured of
+    alpha = -9999
 
-        min_move = None
-        min_val = 9999
+    # the maximum score that the minimizing player is assured of
+    beta = 9999
 
-        # alpha is the upper bound, beta is the lower bound
+    # same thing as alphabeta, but this time we want the move instead of value
 
-        alpha = -9999
-        beta = 9999
-
-        for move in board.legal_moves:
-            if min_move is None:
-                min_move = move
-            board.push(move)
-            curr_val = max(board, depth - 1, alpha, beta)
-            if curr_val is not None and (min_val is None or curr_val < min_val):
-                min_val = curr_val
-                min_move = move
-                alpha = curr_val
+    if maximizing_player:
+        value = -9999
+        move = None
+        for child in board.legal_moves:
+            board.push(child)
+            child_value = alphabeta_algorithm(board, depth - 1,
+                                              alpha, beta, not maximizing_player)
+            if child_value > value:
+                value = child_value
+                move = child
             board.pop()
-
-        print(f"min_val is {min_val}")
-        return min_move
-
-    elif board.turn == chess.WHITE:
-        print("maximizing the board state...")
-
-        if(depth == 0):
-            return eval_function(board)
-
-        max_move = None
-        max_val = -9999
-
-        # alpha is the upper bound, beta is the lower bound
-
-        alpha = -9999
-        beta = 9999
-
-        for move in board.legal_moves:
-            if max_move is None:
-                max_move = move
-            board.push(move)
-            curr_val = min(board, depth - 1, alpha, beta)
-            if curr_val is not None and (max_val is None or curr_val > max_val):
-                max_val = curr_val
-                max_move = move
-                beta = curr_val
+            if value >= beta:
+                break
+            a = max(alpha, value)
+        return move
+    else:
+        value = 9999
+        move = None
+        for child in board.legal_moves:
+            board.push(child)
+            child_value = alphabeta_algorithm(board, depth - 1,
+                                              alpha, beta, not maximizing_player)
+            if child_value < value:
+                value = child_value
+                move = child
             board.pop()
-
-        print(f"max_val is {max_val}")
-        return max_move
-
-
-if __name__ == "__main__":
-
-    print("Starting pos:")
-    board = chess.Board()
-    print(board)
-    print()
-
-    while not board.is_variant_win() and not board.is_variant_loss():
-
-        print("Current turn: ")
-        print("WHITE" if board.turn else "BLACK")
-        print()
-        print(board)
-        print('a|b|c|d|e|f|g|h')
-        print()
-
-        if board.turn:
-            user_move = input()
-            move = chess.Move.from_uci(user_move)
-
-            while move not in board.legal_moves:
-                print("Invalid move, try again...")
-
-                user_move = input()
-                move = chess.Move.from_uci(user_move)
-
-            board.push(move)
-        else:
-            ai_move = alphabeta(board, SEARCH_DEPTH)
-            board.push(ai_move)
-
-    turn = "WHITE" if board.turn else "BLACK"
-    print(turn + " won")
+            # we dont have to search any further, since this move is already less than alpha (for max player)
+            if value <= alpha:
+                break
+            # but this move might be less than alpha, which we can use
+            a = min(alpha, value)
+        return move
