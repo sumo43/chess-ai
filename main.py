@@ -42,8 +42,13 @@ class Game(threading.Thread):
 
     def handle_state_change(self, game_state):
 
+        print(game_state)
+
         game_state_moves = game_state['moves'].split(' ')
 
+        print(len(game_state_moves) % 2)
+        i = 0
+        turns = [chess.WHITE, chess.BLACK]
         # read the game state
         for move in game_state_moves:
             # push the move to the board
@@ -51,6 +56,7 @@ class Game(threading.Thread):
 
         self.engine.print_board()
         if len(game_state_moves) % 2 == 1:
+            # the opponent just made a move, time to make a move
             ai_move = self.engine.ai_move()
             self.client.bots.make_move(self.game_id, ai_move)
 

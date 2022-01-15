@@ -5,6 +5,7 @@ from alphabeta import alphabeta
 
 DEPTH = 3
 
+
 class ChessEngine():
 
     moves = dict()
@@ -14,7 +15,7 @@ class ChessEngine():
     def __init__(self, ai=alphabeta):
         self.ai = ai
         self.board = Board()
-    
+
     def ai_move(self):
         nextmove = self.ai(self.board, DEPTH, self.moves[self.board.turn])
         while nextmove in self.moves[self.board.turn]:
@@ -28,26 +29,21 @@ class ChessEngine():
 
     def print_board(self):
         print(self.board)
-    
+
     def reset_game(self):
         self.moves[chess.WHITE] = []
         self.moves[chess.BLACK] = []
         self.board = Board()
 
-    def push_move_white(self, move_str):
+    def push_move(self, move_str, move_side):
         move = chess.Move.from_uci(move_str)
-        self.moves[chess.WHITE].push(move)
-        self.board.push(move)
-
-    def push_move_black(self, move_str):
-        move = chess.Move.from_uci(move_str)
-        self.moves[chess.BLACK].push(move)
+        self.moves[move_side].push(move)
         self.board.push(move)
 
     def uci_mode(self):
         # uci mode for chess bot executable
-    
-        our_time, opp_time = 1000, 1000 # time in centi-seconds
+
+        our_time, opp_time = 1000, 1000  # time in centi-seconds
         stack = []
 
         while True:
@@ -56,7 +52,7 @@ class ChessEngine():
 
             if smove == 'quit':
                 break
-            
+
             elif smove == 'uci':
                 self.output('id name ai-chess')
                 self.output('id author Artem Yatsenko')
@@ -64,10 +60,10 @@ class ChessEngine():
 
             elif smove == 'isready':
                 self.output('readyok')
-            
+
             elif smove == 'register':
                 self.output('later')
-            
+
             elif smove == 'ucinewgame':
                 self.reset_game()
                 pass
@@ -91,7 +87,7 @@ class ChessEngine():
                         self.board.set_board_fen(fen)
                     for move_uci in moveslist:
                         self.board.push(chess.Move.from_uci(move_uci))
-                 
+
             elif smove.startswith('go'):
 
                 fen_move = self.ai_move()
