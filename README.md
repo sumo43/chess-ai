@@ -4,7 +4,7 @@ Chess AI agent. Goal is 1800+ ELO 🚀
 
 ## PROGRESS
 
-#### Current Elo: ~1350 (beats Stockfish Lv1)
+#### Current Elo: ~1100 (beats Stockfish Lv2, loses against Stockfish lv3)
 
 -   [x] Naive minimax chess engine
 -   [x] Alpha beta chess engine
