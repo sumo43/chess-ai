@@ -1,7 +1,7 @@
 import chess
 from util import naive_eval_function
 
-SEARCH_DEPTH = 4
+SEARCH_DEPTH = 6
 eval_function = naive_eval_function
 
 
