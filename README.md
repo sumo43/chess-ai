@@ -16,7 +16,7 @@ Chess AI agent. Goal is 1800+ ELO 🚀
 
 -   [x] familiarize with python-chess library, make a basic chess game
 -   [x] read about AI minimax
--   [ ] Make the chess bots uci-compatible (to measure elo, etc...)
--   [ ] chess bot testing flow
--   [ ] Implement pruned minimax chess engine
+-   [x] Make the chess bots uci-compatible (to measure elo, etc...)
+-   [x] chess bot testing flow
+-   [x] Implement pruned minimax chess engine
 -   [ ] read about Monte carlo sims
