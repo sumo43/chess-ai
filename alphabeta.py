@@ -1,14 +1,17 @@
 import chess
 from util import naive_eval_function
+import json
 
 EVAL_FUNC = naive_eval_function
-MAX_DEPTH = 4
+MAX_DEPTH = 3
+
+memo = None
 
 
 def alphabeta_algorithm(board, depth, alpha, beta, maximizing_player):
     board_value = naive_eval_function(board)
     if depth == 0 or abs(board_value) == 200:
-        return naive_eval_function(board)
+        return board_value
 
     if maximizing_player:
         value = -9999
