@@ -3,7 +3,7 @@ from util import naive_eval_function
 import json
 
 EVAL_FUNC = naive_eval_function
-MAX_DEPTH = 3
+MAX_DEPTH = 2
 
 memo = None
 

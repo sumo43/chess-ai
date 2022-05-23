@@ -4,7 +4,7 @@ from alphabeta import alphabeta
 from minimax import compute_min
 # AI: given a board and a player (black or white), return the best Chess.Move
 
-MAX_DEPTH = 4
+MAX_DEPTH = 3
 
 
 class ChessEngine():
