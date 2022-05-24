@@ -1,7 +1,7 @@
 import chess
 from chess import Board
-from alphabeta import alphabeta
-from minimax import compute_min
+from engines.alphabeta import alphabeta
+from engines.minimax import compute_min
 
 """
 

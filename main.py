@@ -1,11 +1,13 @@
-from chessengine import ChessEngine
+from util.runner import ChessRunner
 from time import sleep
 import berserk
 from local import API_TOKEN
 import chess
-from pprint import pprint
-from engine import ChessEngine
+import threading
+from util.runner import ChessRunner
 
+
+"""
 def selfplay():
     engine = ChessEngine()
     i = 0
@@ -19,13 +21,14 @@ def selfplay():
     print(engine.board.outcome())
     print(i)
 
+"""
 
 def ucimode():
-    engine = ChessEngine()
+    engine = ChessRunner()
     engine.uci_mode()
 
 
-class Game:
+class Game(threading.Thread):
     def __init__(self, client, game_id, **kwargs):
         super().__init__(**kwargs)
         self.game_id = game_id
@@ -45,7 +48,7 @@ class Game:
             if self.current_state['black']['id'] == 'yatsenkoa-bot':
                 self.side = chess.BLACK
 
-        self.engine = ChessEngine(self.side)
+        self.engine = ChessRunner(self.side)
 
         # the opponent is waiting for our first move
         if self.side == chess.WHITE and self.current_state['state']['moves'] == '':

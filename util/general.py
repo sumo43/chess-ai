@@ -1,6 +1,5 @@
 import chess
 
-
 def naive_eval_function(board):
 
     # if the state is a winning state, add 1000 points

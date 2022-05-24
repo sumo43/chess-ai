@@ -1,5 +1,5 @@
 import chess
-from util import naive_eval_function
+from util.general import naive_eval_function
 import json
 
 EVAL_FUNC = naive_eval_function
