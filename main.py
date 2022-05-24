@@ -2,10 +2,9 @@ from chessengine import ChessEngine
 from time import sleep
 import berserk
 from local import API_TOKEN
-import threading
 import chess
 from pprint import pprint
-
+from engine import ChessEngine
 
 def selfplay():
     engine = ChessEngine()
@@ -26,7 +25,7 @@ def ucimode():
     engine.uci_mode()
 
 
-class Game(threading.Thread):
+class Game:
     def __init__(self, client, game_id, **kwargs):
         super().__init__(**kwargs)
         self.game_id = game_id

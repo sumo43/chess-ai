@@ -81,3 +81,39 @@ def alphabeta(board, maximizing_player, depth=MAX_DEPTH):
             # but this move might be less than alpha, which we can use
             a = min(alpha, value)
         return move
+
+
+if __name__ == "__main__":
+
+    print("Starting pos:")
+    board = chess.Board()
+    print(board)
+    print()
+
+    while not board.is_variant_win() and not board.is_variant_loss():
+
+        print("Current turn: ")
+        print("WHITE" if board.turn else "BLACK")
+        print()
+        print(board)
+        print('a|b|c|d|e|f|g|h')
+        print()
+
+        if board.turn:
+            user_move = input()
+            move = chess.Move.from_uci(user_move)
+
+            while move not in board.legal_moves:
+                print("Invalid move, try again...")
+
+                user_move = input()
+                move = chess.Move.from_uci(user_move)
+
+            board.push(move)
+        else:
+            ai_move = alphabeta(board, SEARCH_DEPTH)
+            board.push(ai_move)
+
+    turn = "WHITE" if board.turn else "BLACK"
+    print(turn + " won")
+
