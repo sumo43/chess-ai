@@ -1,10 +1,9 @@
-from util.runner import ChessRunner
 from time import sleep
 import berserk
 from local import API_TOKEN
 import chess
 import threading
-from util.runner import ChessRunner
+from engine.chessengine import ChessEngine
 
 
 """
@@ -24,9 +23,8 @@ def selfplay():
 """
 
 def ucimode():
-    engine = ChessRunner()
+    engine = ChessEngine()
     engine.uci_mode()
-
 
 class Game(threading.Thread):
     def __init__(self, client, game_id, **kwargs):
@@ -48,7 +46,7 @@ class Game(threading.Thread):
             if self.current_state['black']['id'] == 'yatsenkoa-bot':
                 self.side = chess.BLACK
 
-        self.engine = ChessRunner(self.side)
+        self.engine = ChessEngine(self.side)
 
         # the opponent is waiting for our first move
         if self.side == chess.WHITE and self.current_state['state']['moves'] == '':
@@ -92,7 +90,6 @@ class Game(threading.Thread):
     def handle_chat_line(self, chat_line):
         print(chat_line)
         pass
-
 
 if __name__ == "__main__":
     session = berserk.TokenSession(API_TOKEN)

@@ -1,19 +1,17 @@
 import chess
 from chess import Board
-from engines.alphabeta import alphabeta
-from engines.minimax import compute_min
+from ai.alphabeta import alphabeta
 
 """
 
-Chess Runner interacts with UCI. 
-designed to be sued with different chess engines
+Chess Runner interacts with UCI & Berserk, but mostly berserk. 
+Other chess engines that need some kind of special data collection subclass ChessEngine
 
 """
 
 MAX_DEPTH = 3
 
-
-class ChessRunner():
+class ChessEngine():
 
     moves = dict()
     maximizing_player = None
@@ -25,10 +23,7 @@ class ChessRunner():
 
     def ai_move(self):
         nextmove = self.ai(self.board, self.maximizing_player, MAX_DEPTH)
-        """
-        while nextmove in self.moves[self.board.turn]:
-            nextmove = self.ai(self.board, self.maximizing_player, 3)
-        """
+
         print(self.board)
         if nextmove == None:
             return None
