@@ -7,7 +7,6 @@ MAX_DEPTH = 2
 
 memo = None
 
-
 def alphabeta_algorithm(board, depth, alpha, beta, maximizing_player):
     board_value = naive_eval_function(board)
     if depth == 0 or abs(board_value) == 200:
